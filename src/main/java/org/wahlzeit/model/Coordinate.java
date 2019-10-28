@@ -65,6 +65,18 @@ public class Coordinate {
   }
 
   /**
+   * Are the two passed floating point numbers equal (or within a small tolerance)?
+   */
+  private boolean isNearlyEqualDouble(double number1, double number2) {
+    final double EPSILON = 0.00001;
+
+    if (Math.abs(number1 - number2) < EPSILON) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Is some object equal to this one?
    * 
    * @param obj The object to compare this one against.
@@ -80,7 +92,11 @@ public class Coordinate {
 
     Coordinate coordinateObject = (Coordinate) obj;
 
-    if (x == coordinateObject.x && y == coordinateObject.y && z == coordinateObject.z) {
+    if (
+      isNearlyEqualDouble(x, coordinateObject.x) && 
+      isNearlyEqualDouble(y, coordinateObject.y) && 
+      isNearlyEqualDouble(z, coordinateObject.z)
+    ) {
       return true;
     }
     return false;
@@ -103,5 +119,5 @@ public class Coordinate {
     temp = Double.doubleToLongBits(z);
     result = prime * result + (int) (temp ^ (temp >>> 32));
     return result;
-  }  
+  }
 }

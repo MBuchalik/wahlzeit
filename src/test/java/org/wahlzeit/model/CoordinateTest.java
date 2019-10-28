@@ -7,7 +7,7 @@ public class CoordinateTest {
    * Are the two passed floating point numbers equal (or within a small tolerance)?
    */
   private boolean isNearlyEqual(double number1, double number2) {
-    final Double EPSILON = 0.00001;
+    final double EPSILON = 0.00001;
 
     if (Math.abs(number1 - number2) < EPSILON) {
       return true;
