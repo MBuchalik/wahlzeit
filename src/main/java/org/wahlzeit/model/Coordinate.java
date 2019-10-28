@@ -19,33 +19,6 @@ public class Coordinate {
     this.z = z;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    return isEqual(obj);
-  }
-
-  /**
-   * Is some object equal to this one?
-   * 
-   * @param obj The object to compare this one against.
-   */
-  public boolean isEqual(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-
-    if (!(obj instanceof Coordinate)) {
-      return false;
-    }
-
-    Coordinate coordinateObject = (Coordinate) obj;
-
-    if (x == coordinateObject.x && y == coordinateObject.y && z == coordinateObject.z) {
-      return true;
-    }
-    return false;
-  }
-
   /**
    * Get the X value of this coordinate.
    */
@@ -90,4 +63,45 @@ public class Coordinate {
 
     return result;
   }
+
+  /**
+   * Is some object equal to this one?
+   * 
+   * @param obj The object to compare this one against.
+   */
+  public boolean isEqual(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+
+    if (!(obj instanceof Coordinate)) {
+      return false;
+    }
+
+    Coordinate coordinateObject = (Coordinate) obj;
+
+    if (x == coordinateObject.x && y == coordinateObject.y && z == coordinateObject.z) {
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return isEqual(obj);
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    long temp;
+    temp = Double.doubleToLongBits(x);
+    result = prime * result + (int) (temp ^ (temp >>> 32));
+    temp = Double.doubleToLongBits(y);
+    result = prime * result + (int) (temp ^ (temp >>> 32));
+    temp = Double.doubleToLongBits(z);
+    result = prime * result + (int) (temp ^ (temp >>> 32));
+    return result;
+  }  
 }
