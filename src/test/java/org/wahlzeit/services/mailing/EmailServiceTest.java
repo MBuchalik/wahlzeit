@@ -57,4 +57,37 @@ public class EmailServiceTest {
 			Assert.fail("Silent mode does not allow exceptions");
 		}
 	}
+
+	/**
+	 * When an invalid email address has been used, the sendEmail() methods should throw a MailingException.
+	 */
+	@Test
+	public void testExceptions() throws MailingException {
+		emailService.sendEmail(validAddress, validAddress, "the subject", "the body");
+
+		try {
+			emailService.sendEmail(null, validAddress, "the subject", "the body");
+			Assert.fail("sendEmail() should thow a MailingException when an invalid email address has been used as 'from' parameter.");
+		} catch (MailingException ex) {}
+
+		try {
+			emailService.sendEmail(validAddress, null, "the subject", "the body");
+			Assert.fail("sendEmail() should thow a MailingException when an invalid email address has been used as 'to' parameter.");
+		} catch (MailingException ex) {}
+
+		// Do the same as above, but also provide a BCC parameter.
+		emailService.sendEmail(validAddress, validAddress, validAddress, "the subject", "the body");
+
+		try {
+			emailService.sendEmail(null, validAddress, validAddress, "the subject", "the body");
+			Assert.fail("sendEmail() should thow a MailingException when an invalid email address has been used as 'from' parameter.");
+		} catch (MailingException ex) {}
+
+		try {
+			emailService.sendEmail(validAddress, null, validAddress, "the subject", "the body");
+			Assert.fail("sendEmail() should thow a MailingException when an invalid email address has been used as 'to' parameter.");
+		} catch (MailingException ex) {}
+
+		// There is currently no check for the BCC parameter in the code, so there is no need to test for an Exception here.
+	}
 }
