@@ -34,6 +34,15 @@ public class EmailAddressTest extends TestCase {
 		super(name);
 	}
 
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+
+		// Make sure we start each test with a "fresh" fixture.
+		EmailAddress.instances.clear();
+		EmailAddress.doGetFromString("");
+	}
+
 	/**
 	 *
 	 */
@@ -66,5 +75,20 @@ public class EmailAddressTest extends TestCase {
 		assertFalse(EmailAddress.EMPTY.isValid());
 	}
 
+	/**
+	 * When calling getFromString(), the returned instances should only be newly created if no instance for this particular email address exists.
+	 */
+	public void testInstancesCache() {
+		EmailAddress instance1 = EmailAddress.getFromString("bingo.bongo@bongo.com");
+		EmailAddress similarToInstance1 = EmailAddress.getFromString("bingo.bongo@bongo.com");
+		EmailAddress instance2 = EmailAddress.getFromString("bingo@bongo.com");
+
+		assertNotNull(instance1);
+		assertNotNull(similarToInstance1);
+		assertNotNull(instance2);
+
+		assert(instance1 == similarToInstance1);
+		assert(instance2 != instance1 && instance2 != similarToInstance1);
+	}
 }
 
