@@ -9,7 +9,7 @@ public class PalacePhotoFactory extends PhotoFactory {
 
   private static PalacePhotoFactory instance = null;
 
-  /**
+	/**
 	 * Public singleton access method.
 	 */
 	public static synchronized PalacePhotoFactory getInstance() {
@@ -21,7 +21,7 @@ public class PalacePhotoFactory extends PhotoFactory {
 		return instance;
 	}
 
-  /**
+	/**
 	 * Method to set the singleton instance of PalacePhotoFactory.
 	 */
 	protected static synchronized void setInstance(PalacePhotoFactory photoFactory) {
