@@ -36,7 +36,7 @@ public class PhotoFactory {
 	private static PhotoFactory instance = null;
 
 	/**
-	 *
+	 * @methodtype constructor
 	 */
 	protected PhotoFactory() {
 		// do nothing
@@ -44,6 +44,8 @@ public class PhotoFactory {
 
 	/**
 	 * Hidden singleton instance; needs to be initialized from the outside.
+	 * 
+	 * @methodtype init
 	 */
 	public static void initialize() {
 		getInstance(); // drops result due to getInstance() side-effects
@@ -51,6 +53,8 @@ public class PhotoFactory {
 
 	/**
 	 * Public singleton access method.
+	 * 
+	 * @methodtype get
 	 */
 	public static synchronized PhotoFactory getInstance() {
 		if (instance == null) {
@@ -63,6 +67,8 @@ public class PhotoFactory {
 
 	/**
 	 * Method to set the singleton instance of PhotoFactory.
+	 * 
+	 * @methodtype set
 	 */
 	protected static synchronized void setInstance(PhotoFactory photoFactory) {
 		if (instance != null) {
@@ -81,6 +87,8 @@ public class PhotoFactory {
 
 	/**
 	 * Creates a new photo with the specified id
+	 *
+	 * @methodtype factory
 	 */
 	public Photo createPhoto(PhotoId id) {
 		return new Photo(id);
@@ -104,14 +112,14 @@ public class PhotoFactory {
 
 
 	/**
-	 *
+	 * @methodtype factory
 	 */
 	public PhotoFilter createPhotoFilter() {
 		return new PhotoFilter();
 	}
 
 	/**
-	 *
+	 * @methodtype factory
 	 */
 	public PhotoTagCollector createPhotoTagCollector() {
 		return new PhotoTagCollector();

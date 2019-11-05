@@ -63,42 +63,42 @@ public class PhotoManager extends ObjectManager {
 	protected PhotoTagCollector photoTagCollector = null;
 
 	/**
-	 *
+	 * @methodtype constructor
 	 */
 	public PhotoManager() {
 		photoTagCollector = PhotoFactory.getInstance().createPhotoTagCollector();
 	}
 
 	/**
-	 *
+	 * @methodtype get
 	 */
-	public static final PhotoManager getInstance() {
+	public static PhotoManager getInstance() {
 		return instance;
 	}
 
 	/**
-	 *
+	 * @methodtype boolean-query
 	 */
 	public final boolean hasPhoto(String id) {
 		return hasPhoto(PhotoId.getIdFromString(id));
 	}
 
 	/**
-	 *
+	 * @methodtype boolean-query
 	 */
 	public final boolean hasPhoto(PhotoId id) {
 		return getPhoto(id) != null;
 	}
 
 	/**
-	 *
+	 * @methodtype get
 	 */
-	public final Photo getPhoto(PhotoId id) {
+	public Photo getPhoto(PhotoId id) {
 		return instance.getPhotoFromId(id);
 	}
 
 	/**
-	 *
+	 * @methodtype get
 	 */
 	public Photo getPhotoFromId(PhotoId id) {
 		if (id == null) {
@@ -141,7 +141,9 @@ public class PhotoManager extends ObjectManager {
 	}
 
 	/**
-	 * @methodtype init Loads all Photos from the Datastore and holds them in the cache
+	 * Loads all Photos from the Datastore and holds them in the cache
+	 *
+	 * @methodtype init 
 	 */
 	public void init() {
 		loadPhotos();
@@ -219,7 +221,7 @@ public class PhotoManager extends ObjectManager {
 	}
 
 	/**
-	 *
+	 * @methodtype command
 	 */
 	public void savePhoto(Photo photo) {
 		updateObject(photo);
@@ -298,7 +300,7 @@ public class PhotoManager extends ObjectManager {
 	}
 
 	/**
-	 *
+	 * @methodtype command
 	 */
 	public void savePhotos() throws IOException{
 		updateObjects(photoCache.values());
@@ -312,7 +314,7 @@ public class PhotoManager extends ObjectManager {
 	}
 
 	/**
-	 *
+	 * @methodtype query
 	 */
 	public Set<Photo> findPhotosByOwner(String ownerName) {
 		Set<Photo> result = new HashSet<Photo>();
@@ -326,7 +328,7 @@ public class PhotoManager extends ObjectManager {
 	}
 
 	/**
-	 *
+	 * @methodtype get
 	 */
 	public Photo getVisiblePhoto(PhotoFilter filter) {
 		filter.generateDisplayablePhotoIds();
@@ -334,7 +336,7 @@ public class PhotoManager extends ObjectManager {
 	}
 
 	/**
-	 *
+	 * @methodtype factory
 	 */
 	public Photo createPhoto(String filename, Image uploadedImage) throws Exception {
 		PhotoId id = PhotoId.getNextId();

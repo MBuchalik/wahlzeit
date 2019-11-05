@@ -64,21 +64,21 @@ public class PhotoFilter implements Serializable {
 	protected Random randomNumber = new Random(System.currentTimeMillis());
 
 	/**
-	 *
+	 * @methodtype constructor
 	 */
 	public PhotoFilter() {
 		resetDisplayablePhotoIds();
 	}
 
 	/**
-	 *
+	 * @methodtype get
 	 */
 	public String getUserName() {
 		return userName;
 	}
 
 	/**
-	 *
+	 * @methodtype command
 	 */
 	public void clear() {
 		setUserName("");
@@ -88,7 +88,7 @@ public class PhotoFilter implements Serializable {
 	}
 
 	/**
-	 *
+	 * @methodtype set
 	 */
 	public void setUserName(String newUserName) {
 		userName = newUserName;
@@ -96,14 +96,14 @@ public class PhotoFilter implements Serializable {
 	}
 
 	/**
-	 *
+	 * @methodtype get
 	 */
 	public Tags getTags() {
 		return tags;
 	}
 
 	/**
-	 *
+	 * @methodtype set
 	 */
 	public void setTags(Tags newTags) {
 		tags = newTags;
@@ -111,7 +111,7 @@ public class PhotoFilter implements Serializable {
 	}
 
 	/**
-	 *
+	 * @methodtype get
 	 */
 	public List<String> getFilterConditions() {
 		List<String> filterConditions = new ArrayList<String>();
@@ -122,7 +122,7 @@ public class PhotoFilter implements Serializable {
 	}
 
 	/**
-	 *
+	 * @methodtype helper
 	 */
 	protected void collectFilterConditions(List<String> filterConditions) {
 		String un = getUserName();
@@ -157,35 +157,35 @@ public class PhotoFilter implements Serializable {
 	}
 
 	/**
-	 *
+	 * @methodtype get
 	 */
 	public List<PhotoId> getDisplayablePhotoIds() {
 		return displayablePhotoIds;
 	}
 
 	/**
-	 *
+	 * @methodtype set
 	 */
 	public void setDisplayablePhotoIds(List<PhotoId> newPhotoIds) {
 		displayablePhotoIds = newPhotoIds;
 	}
 
 	/**
-	 *
+	 * @methodtype set
 	 */
 	public void resetDisplayablePhotoIds() {
 		displayablePhotoIds = new ArrayList<PhotoId>();
 	}
 
 	/**
-	 *
+	 * @methodtype get
 	 */
 	public List<PhotoId> getProcessedPhotoIds() {
 		return processedPhotoIds;
 	}
 
 	/**
-	 *
+	 * @methodtype boolean-query
 	 */
 	public boolean isProcessedPhotoId(PhotoId photoId) {
 		log.info("photoId: " + photoId.asString());
@@ -196,7 +196,7 @@ public class PhotoFilter implements Serializable {
 	}
 
 	/**
-	 *
+	 * @methodtype command
 	 */
 	public void addProcessedPhoto(Photo photo) {
 		PhotoId photoId = photo.getId();
@@ -232,7 +232,16 @@ public class PhotoFilter implements Serializable {
 	}
 
 	/**
-	 *
+	 * A hook method allowing us to use another PhotoManager if needed.
+	 * 
+	 * @methodtype get
+	 */
+	protected PhotoManager getPhotoManagerInstance() {
+		return PhotoManager.getInstance();
+	}
+
+	/**
+	 * @methodtype get
 	 */
 	protected List<PhotoId> getFilteredPhotoIds() {
 		// get all tags that match the filter conditions
@@ -243,12 +252,12 @@ public class PhotoFilter implements Serializable {
 
 		Collection<PhotoId> candidates;
 		if (noFilterConditions == 0) {
-			candidates = PhotoManager.getInstance().getPhotoCache().keySet();
+			candidates = getPhotoManagerInstance().getPhotoCache().keySet();
 		} else {
 			List<Tag> tags = new LinkedList<Tag>();
 			candidates = new LinkedList<PhotoId>();
 			for (String condition : getFilterConditions()) {
-				PhotoManager.getInstance().addTagsThatMatchCondition(tags, condition);
+				getPhotoManagerInstance().addTagsThatMatchCondition(tags, condition);
 			}
 			// get the list of all photo ids that correspond to the tags
 			for (Tag tag : tags) {
@@ -258,7 +267,7 @@ public class PhotoFilter implements Serializable {
 
 		int newPhotos = 0;
 		for (PhotoId candidateId : candidates) {
-			Photo photoCandidate = PhotoManager.getInstance().getPhoto(candidateId);
+			Photo photoCandidate = getPhotoManagerInstance().getPhoto(candidateId);
 			if (!processedPhotoIds.contains(candidateId) && !skippedPhotoIds.contains(candidateId) &&
 					photoCandidate.isVisible()) {
 				result.add(candidateId);

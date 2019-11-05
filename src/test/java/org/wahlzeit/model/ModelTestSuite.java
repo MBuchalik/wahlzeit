@@ -12,6 +12,8 @@ import org.junit.runners.Suite.SuiteClasses;
   FlagReasonTest.class,
   GenderTest.class,
   GuestTest.class,
+  PalacePhotoFactoryTest.class,
+  PalacePhotoManagerTest.class,
   PhotoFilterTest.class,
   TagsTest.class,
   UserStatusTest.class,
