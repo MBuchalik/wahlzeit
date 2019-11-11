@@ -93,7 +93,7 @@ public class PhotoManager extends ObjectManager {
 	/**
 	 * @methodtype get
 	 */
-	public Photo getPhoto(PhotoId id) {
+	public final Photo getPhoto(PhotoId id) {
 		return instance.getPhotoFromId(id);
 	}
 
