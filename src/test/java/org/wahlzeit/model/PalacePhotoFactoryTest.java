@@ -18,13 +18,4 @@ public class PalacePhotoFactoryTest {
 
     assert(photo instanceof PalacePhoto);
   }
-
-  @Test
-  public void testCreatePhotoFilter() throws Exception {
-    PhotoFactory instance = PalacePhotoFactory.getInstance();
-
-    PhotoFilter filter = instance.createPhotoFilter();
-
-    assert(filter instanceof PalacePhotoFilter);
-  }
 }

@@ -232,15 +232,6 @@ public class PhotoFilter implements Serializable {
 	}
 
 	/**
-	 * A hook method allowing us to use another PhotoManager if needed.
-	 * 
-	 * @methodtype get
-	 */
-	protected PhotoManager getPhotoManagerInstance() {
-		return PhotoManager.getInstance();
-	}
-
-	/**
 	 * @methodtype get
 	 */
 	protected List<PhotoId> getFilteredPhotoIds() {
@@ -252,12 +243,12 @@ public class PhotoFilter implements Serializable {
 
 		Collection<PhotoId> candidates;
 		if (noFilterConditions == 0) {
-			candidates = getPhotoManagerInstance().getPhotoCache().keySet();
+			candidates = PhotoManager.getInstance().getPhotoCache().keySet();
 		} else {
 			List<Tag> tags = new LinkedList<Tag>();
 			candidates = new LinkedList<PhotoId>();
 			for (String condition : getFilterConditions()) {
-				getPhotoManagerInstance().addTagsThatMatchCondition(tags, condition);
+				PhotoManager.getInstance().addTagsThatMatchCondition(tags, condition);
 			}
 			// get the list of all photo ids that correspond to the tags
 			for (Tag tag : tags) {
@@ -267,7 +258,7 @@ public class PhotoFilter implements Serializable {
 
 		int newPhotos = 0;
 		for (PhotoId candidateId : candidates) {
-			Photo photoCandidate = getPhotoManagerInstance().getPhoto(candidateId);
+			Photo photoCandidate = PhotoManager.getInstance().getPhoto(candidateId);
 			if (!processedPhotoIds.contains(candidateId) && !skippedPhotoIds.contains(candidateId) &&
 					photoCandidate.isVisible()) {
 				result.add(candidateId);

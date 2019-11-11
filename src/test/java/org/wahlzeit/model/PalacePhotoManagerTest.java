@@ -13,7 +13,7 @@ public class PalacePhotoManagerTest {
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
 
-  private final PalacePhotoManager managerInstance = PalacePhotoManager.getInstance();
+  private final PhotoManager managerInstance = PalacePhotoManager.getInstance();
       
   @Before
   public void setUp() {
