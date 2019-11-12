@@ -8,13 +8,14 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @SuiteClasses({
   AccessRightsTest.class,
-  CoordinateTest.class,
+  CarthesianCoordinateTest.class,
   FlagReasonTest.class,
   GenderTest.class,
   GuestTest.class,
   PalacePhotoFactoryTest.class,
   PalacePhotoManagerTest.class,
   PhotoFilterTest.class,
+  SphericCoordinateTest.class,
   TagsTest.class,
   UserStatusTest.class,
   ValueTest.class
