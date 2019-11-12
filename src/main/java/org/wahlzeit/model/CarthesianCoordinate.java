@@ -1,8 +1,5 @@
 package org.wahlzeit.model;
 
-/**
- * The Coordinate class represents a carthesian coordinate in 3-dimensional space.
- */
 public class CarthesianCoordinate implements Coordinate {
   private final double x;
   private final double y;
