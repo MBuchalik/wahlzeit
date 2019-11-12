@@ -160,11 +160,11 @@ public class CarthesianCoordinate implements Coordinate {
     final int prime = 31;
     int result = 1;
     long temp;
-    temp = Double.doubleToLongBits(round(x, 7));
+    temp = Double.doubleToLongBits(round(x, 4));
     result = prime * result + (int) (temp ^ (temp >>> 32));
-    temp = Double.doubleToLongBits(round(y, 7));
+    temp = Double.doubleToLongBits(round(y, 4));
     result = prime * result + (int) (temp ^ (temp >>> 32));
-    temp = Double.doubleToLongBits(round(z, 7));
+    temp = Double.doubleToLongBits(round(z, 4));
     result = prime * result + (int) (temp ^ (temp >>> 32));
 
     return result;
