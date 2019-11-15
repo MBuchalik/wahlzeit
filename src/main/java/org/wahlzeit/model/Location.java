@@ -4,19 +4,19 @@ package org.wahlzeit.model;
  * The Location class represents a geographic location.
  */
 public class Location {
-  private CarthesianCoordinate coordinate;
+  private Coordinate coordinate;
 
   /**
    * @param coordinate The Coordinate to be set for this Location.
    */
-  Location(CarthesianCoordinate coordinate) {
+  Location(Coordinate coordinate) {
     this.coordinate = coordinate;
   }
 
   /**
    * Get the Coordinate associated with this Location.
    */
-  public CarthesianCoordinate getCoordinate() {
+  public Coordinate getCoordinate() {
     return coordinate;
   }
 }
