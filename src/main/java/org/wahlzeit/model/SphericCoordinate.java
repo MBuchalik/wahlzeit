@@ -1,6 +1,6 @@
 package org.wahlzeit.model;
 
-public class SphericCoordinate implements Coordinate {
+public class SphericCoordinate extends AbstractCoordinate {
   private final double radius;
   // Phi is stored in radians.
   private final double phi;
@@ -57,40 +57,7 @@ public class SphericCoordinate implements Coordinate {
   }
 
   @Override
-  public double getCarthesianDistance(Coordinate otherCoordinate) {
-    // Let's just use one implementation here.
-    CarthesianCoordinate thisCoordinate = asCarthesianCoordinate();
-    return thisCoordinate.getCarthesianDistance(otherCoordinate);
-  }
-
-  @Override
   public SphericCoordinate asSphericCoordinate() {
     return this;
-  }
-
-  @Override
-  public double getCentralAngle(Coordinate otherCoordinate) {
-    // Let's just use one implementation here.
-    CarthesianCoordinate thisCoordinate = asCarthesianCoordinate();
-    return thisCoordinate.getCentralAngle(otherCoordinate);
-  }
-
-  @Override
-  public boolean isEqual(Object obj) {
-    // Let's just use one implementation here.
-    CarthesianCoordinate thisCoordinate = asCarthesianCoordinate();
-    return thisCoordinate.isEqual(obj);
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return isEqual(obj);
-  }
-
-  @Override
-  public int hashCode() {
-    // Let's just use one implementation here.
-    CarthesianCoordinate thisCoordinate = asCarthesianCoordinate();
-    return thisCoordinate.hashCode();
   }
 }

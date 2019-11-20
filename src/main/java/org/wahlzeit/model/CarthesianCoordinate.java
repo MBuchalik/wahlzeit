@@ -1,6 +1,6 @@
 package org.wahlzeit.model;
 
-public class CarthesianCoordinate implements Coordinate {
+public class CarthesianCoordinate extends AbstractCoordinate {
   private final double x;
   private final double y;
   private final double z;
@@ -129,11 +129,6 @@ public class CarthesianCoordinate implements Coordinate {
       return true;
     }
     return false;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return isEqual(obj);
   }
 
   /**
