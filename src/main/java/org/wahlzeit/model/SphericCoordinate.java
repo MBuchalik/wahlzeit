@@ -13,8 +13,8 @@ public class SphericCoordinate extends AbstractCoordinate {
    * @param theta The Theta value in radians. It should be in the range of 0 to Pi.
    */
   SphericCoordinate(double radius, double phi, double theta) {
-    assertValidRadius(theta);
-    assertValidPhi(theta);
+    assertValidRadius(radius);
+    assertValidPhi(phi);
     assertValidTheta(theta);
 
     this.radius = radius;
