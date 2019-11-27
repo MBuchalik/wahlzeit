@@ -33,7 +33,7 @@ public class SphericCoordinateTest {
   public void testHashCode() {
     SphericCoordinate sphericCoordinate1 = new SphericCoordinate(1, 2, 3);
     SphericCoordinate similarToCoordinate1 = new SphericCoordinate(1, 2, 3);
-    SphericCoordinate sphericCoordinate2 = new SphericCoordinate(2, 3, 4);
+    SphericCoordinate sphericCoordinate2 = new SphericCoordinate(2, 3, 1);
 
     assert (sphericCoordinate1.hashCode() == similarToCoordinate1.hashCode());
     assert (sphericCoordinate1.hashCode() != sphericCoordinate2.hashCode());
@@ -52,15 +52,15 @@ public class SphericCoordinateTest {
 
   @Test
   public void testAsCarthesianCoordinate() {
-    SphericCoordinate coordinate = new SphericCoordinate(10, 20, 30);
+    SphericCoordinate coordinate = new SphericCoordinate(10, 2, 3);
 
     CarthesianCoordinate carthesianCoordinate = coordinate.asCarthesianCoordinate();
 
     // Retrieved these values using an online calculator at
     // https://keisan.casio.com/exec/system/1359534351
-    double expectedX = -4.0319798229665;
-    double expectedY = -9.0201877878428;
-    double expectedZ = 1.5425144988758;
+    double expectedX = -0.58726644927621;
+    double expectedY = 1.2832006020246;
+    double expectedZ = -9.8999249660045;
 
     double retrievedX = carthesianCoordinate.getX();
     double retrievedY = carthesianCoordinate.getY();

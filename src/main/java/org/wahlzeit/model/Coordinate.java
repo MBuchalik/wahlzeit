@@ -18,11 +18,11 @@ public interface Coordinate {
    */
   public double getCarthesianDistance(Coordinate otherCoordinate);
 
-   /**
-   * Convert this Coordinate to a Spheric Coordinate.
-   * 
-   * @methodtype conversion
-   */
+  /**
+  * Convert this Coordinate to a Spheric Coordinate.
+  * 
+  * @methodtype conversion
+  */
   public SphericCoordinate asSphericCoordinate();
 
   /**
@@ -37,4 +37,9 @@ public interface Coordinate {
    * @param obj The object to compare this one to.
    */
   public boolean isEqual(Object obj);
+
+  /**
+   * Check whether the class invariants are fulfilled.
+   */
+  public void assertClassInvariants();
 }
