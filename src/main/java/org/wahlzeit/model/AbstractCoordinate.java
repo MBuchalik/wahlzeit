@@ -77,7 +77,7 @@ public abstract class AbstractCoordinate implements Coordinate {
   }
 
   public final void assertValidCentralAngle(double angle) {
-    boolean isValid = Double.isFinite(angle) && angle >= 0;
+    boolean isValid = Double.isFinite(angle) && angle >= -Math.PI && angle <= Math.PI;
     assert (isValid) : "The Central Angle should not be less than 0.";
   }
 }
