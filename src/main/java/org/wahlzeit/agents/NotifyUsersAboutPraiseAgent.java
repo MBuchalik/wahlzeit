@@ -13,6 +13,7 @@ import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.mailing.EmailService;
 import org.wahlzeit.services.mailing.EmailServiceManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class NotifyUsersAboutPraiseAgent extends Agent {
 	 * 
 	 * Notifies all users that want to get informed if their photos have been praised.
 	 */
-	protected void doRun() {
+	protected void doRun() throws IOException {
 		Map<PhotoId, Photo> photoCache = PhotoManager.getInstance().getPhotoCache();
 		Collection<Photo> photos = photoCache.values();
 
@@ -58,7 +59,11 @@ public class NotifyUsersAboutPraiseAgent extends Agent {
 					arrayListOfPhotos.add(photo);
 					ownerIdPhotosMap.put(ownerId, arrayListOfPhotos);
 					photo.setNoNewPraise();
-					PhotoManager.getInstance().savePhoto(photo);
+					try {
+						PhotoManager.getInstance().savePhoto(photo);
+					} catch(IOException e) {
+						throw new IOException("Unable to save the Photo", e);
+					}					
 				}
 			}
 		}

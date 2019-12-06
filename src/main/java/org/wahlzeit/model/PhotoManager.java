@@ -223,19 +223,28 @@ public class PhotoManager extends ObjectManager {
 	/**
 	 * @methodtype command
 	 */
-	public void savePhoto(Photo photo) {
-		updateObject(photo);
+	public void savePhoto(Photo photo) throws IOException {
+		try {
+			updateObject(photo);
+		} catch(IOException e) {
+			throw new IOException("Unable to save Photo", e);
+		}		
 	}
 
 	@Override
-	protected void updateDependents(Persistent obj) {
+	protected void updateDependents(Persistent obj) throws IOException {
 		if (obj instanceof Photo) {
 			Photo photo = (Photo) obj;
 			saveScaledImages(photo);
 			updateTags(photo);
 			UserManager userManager = UserManager.getInstance();
 			Client owner = userManager.getClientById(photo.getOwnerId());
-			userManager.saveClient(owner);
+
+			try {
+				userManager.saveClient(owner);
+			} catch(IOException e) {
+				throw new IOException("Unable to update Dependents", e);
+			}			
 		}
 	}
 
@@ -285,7 +294,7 @@ public class PhotoManager extends ObjectManager {
 	 * Removes all tags of the Photo (obj) in the datastore that have been removed by the user and adds all new tags of
 	 * the photo to the datastore.
 	 */
-	protected void updateTags(Photo photo) {
+	protected void updateTags(Photo photo) throws IOException {
 		// delete all existing tags, for the case that some have been removed
 		deleteObjects(Tag.class, Tag.PHOTO_ID, photo.getId().asString());
 
@@ -295,7 +304,12 @@ public class PhotoManager extends ObjectManager {
 		for (Iterator<String> i = tags.iterator(); i.hasNext(); ) {
 			Tag tag = new Tag(i.next(), photo.getId().asString());
 			log.config(LogBuilder.createSystemMessage().addParameter("Writing Tag", tag.asString()).toString());
-			writeObject(tag);
+
+			try {
+				writeObject(tag);
+			} catch(IOException e) {
+				throw new IOException("Unable to update tags", e);
+			}
 		}
 	}
 

@@ -22,6 +22,7 @@ package org.wahlzeit.model;
 
 import org.wahlzeit.services.ObjectManager;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -92,10 +93,14 @@ public class PhotoCaseManager extends ObjectManager {
 	/**
 	 * @methodtype command
 	 */
-	public void addPhotoCase(PhotoCase myCase) {
+	public void addPhotoCase(PhotoCase myCase) throws IOException {
 		openPhotoCases.put(myCase.getId(), myCase);
 		if (myCase.isDirty()) {
-			writeObject(myCase);
+			try {
+				writeObject(myCase);
+			} catch(IOException e) {
+				throw new IOException("Unable to add Photo case", e);
+			}
 		}
 		// @FIXME Main.saveGlobals();
 	}
@@ -103,17 +108,25 @@ public class PhotoCaseManager extends ObjectManager {
 	/**
 	 * @methodtype command
 	 */
-	public void removePhotoCase(PhotoCase myCase) {
+	public void removePhotoCase(PhotoCase myCase) throws IOException {
 		openPhotoCases.remove(myCase.getId());
-		deleteObject(myCase);
+		try {
+			deleteObject(myCase);
+		} catch(IOException e) {
+			throw new IOException("Unable to remove Photo case", e);
+		}		
 	}
 
 	/**
 	 * @methodtype command
 	 */
-	public void savePhotoCases() {
+	public void savePhotoCases() throws IOException {
 		if (openPhotoCases != null && openPhotoCases.size() > 0) {
-			updateObjects(openPhotoCases.values());
+			try {
+				updateObjects(openPhotoCases.values());
+			} catch(IOException e) {
+				throw new IOException("Unable to save Photo case", e);
+			}			
 		}
 	}
 

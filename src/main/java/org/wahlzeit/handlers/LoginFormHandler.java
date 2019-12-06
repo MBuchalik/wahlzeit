@@ -11,6 +11,7 @@ import org.wahlzeit.model.UserSession;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.webparts.WebPart;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -37,7 +38,7 @@ public class LoginFormHandler extends AbstractWebFormHandler {
 	 * Called when a new user logged in. Make sure that a Wahlzeit user exist.
 	 */
 	@Override
-	protected String doHandleGet(UserSession us, String link, Map args) {
+	protected String doHandleGet(UserSession us, String link, Map args) throws IOException {
 		log.info("Link: " + link);
 
 		UserService userService = UserServiceFactory.getUserService();

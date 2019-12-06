@@ -94,13 +94,18 @@ public abstract class ModelMain extends AbstractMain {
 	/**
 	 *
 	 */
-	protected void createUser(String userId, String nickName, String emailAddress, String photoDir) {
+	protected void createUser(String userId, String nickName, String emailAddress, String photoDir) throws IOException {
 		// When Wahlzeit is used on Windows with spaces in one of the parent folders,
 		// the default pictures cannot be read when "%20" is included in the path instead of the actual whitespace.
 		photoDir = photoDir.replaceAll("%20", " ");
 
 		UserManager userManager = UserManager.getInstance();
-		User user = new User(userId, nickName, emailAddress);
+		User user = null;
+		try {
+			user = new User(userId, nickName, emailAddress);
+		} catch(IOException e) {
+			throw new IOException("Unable to create user", e);
+		}
 
 		PhotoManager photoManager = PhotoManager.getInstance();
 		File photoDirFile = new File(photoDir);

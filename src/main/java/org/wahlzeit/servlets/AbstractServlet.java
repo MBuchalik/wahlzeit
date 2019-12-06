@@ -122,13 +122,19 @@ public abstract class AbstractServlet extends HttpServlet {
 	/**
 	 *
 	 */
-	protected UserSession ensureUserSession(HttpServletRequest request) {
+	protected UserSession ensureUserSession(HttpServletRequest request) throws IOException {
 		HttpSession httpSession = request.getSession();
 
 		String sessionName = httpSession.getId();
 		String siteUrl = getSiteUrl(request); // @TODO Application
 
-		UserSession result = new UserSession(sessionName, siteUrl, httpSession, request.getLocale().getLanguage());
+		UserSession result = null;
+
+		try {
+			result = new UserSession(sessionName, siteUrl, httpSession, request.getLocale().getLanguage());
+		} catch(IOException e) {
+			throw new IOException("Unable to create a new User session", e);
+		}
 
 		return result;
 	}

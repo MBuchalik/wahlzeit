@@ -12,6 +12,8 @@ import org.wahlzeit.services.Language;
 import org.wahlzeit.services.SessionManager;
 
 import javax.servlet.http.HttpSession;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +38,13 @@ public class UserSessionProvider extends ExternalResource {
 		String guestName = ObjectifyService.run(new Work<String>() {
 			@Override
 			public String run() {
-				Guest guest = new Guest();
+				Guest guest = null;
+				try {
+					guest = new Guest();
+				} catch(IOException e) {
+					throw new RuntimeException("Unable to create a new Guest", e);
+				}
+				
 				guest.setLanguage(Language.ENGLISH);
 				return guest.getId();
 			}

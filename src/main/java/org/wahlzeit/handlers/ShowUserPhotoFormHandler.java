@@ -33,6 +33,7 @@ import org.wahlzeit.utils.HtmlUtil;
 import org.wahlzeit.utils.StringUtil;
 import org.wahlzeit.webparts.WebPart;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -87,7 +88,7 @@ public class ShowUserPhotoFormHandler extends AbstractWebFormHandler {
 	/**
 	 *
 	 */
-	protected String doHandlePost(UserSession us, Map args) {
+	protected String doHandlePost(UserSession us, Map args) throws IOException {
 		String result = PartUtil.SHOW_USER_HOME_PAGE_NAME;
 
 		String id = us.getAndSaveAsString(args, Photo.ID);

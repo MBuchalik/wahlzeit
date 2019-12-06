@@ -12,10 +12,14 @@ public class CarthesianCoordinate extends AbstractCoordinate {
    * 
    * @methodtype constructor
    */
-  CarthesianCoordinate(double x, double y, double z) {
-    assertValidX(x);
-    assertValidY(y);
-    assertValidZ(z);
+  CarthesianCoordinate(double x, double y, double z) throws IllegalArgumentException {
+    try {
+      assertValidX(x);
+      assertValidY(y);
+      assertValidZ(z);
+    } catch(ArithmeticException e) {
+      throw new IllegalArgumentException("Unable to construct a new CarthesianCoordinate due to bad arguments", e);
+    }    
 
     this.x = x;
     this.y = y;
@@ -29,8 +33,13 @@ public class CarthesianCoordinate extends AbstractCoordinate {
    * 
    * @methodtype get
    */
-  public double getX() {
-    assertValidX(x);
+  public double getX() throws IllegalStateException {
+    try {
+      assertValidX(x);
+    } catch(ArithmeticException e) {
+      throw new IllegalStateException("x is invalid", e);
+    }
+    
     assertClassInvariants();
     return x;
   }
@@ -40,8 +49,13 @@ public class CarthesianCoordinate extends AbstractCoordinate {
    * 
    * @methodtype get
    */
-  public double getY() {
-    assertValidY(y);
+  public double getY() throws IllegalStateException {
+    try {
+      assertValidY(y);
+    } catch(ArithmeticException e) {
+      throw new IllegalStateException("y is invalid", e);
+    }
+    
     assertClassInvariants();
     return y;
   }
@@ -51,8 +65,13 @@ public class CarthesianCoordinate extends AbstractCoordinate {
    * 
    * @methodtype get
    */
-  public double getZ() {
-    assertValidZ(z);
+  public double getZ() throws IllegalStateException {
+    try {
+      assertValidZ(z);
+    } catch(ArithmeticException e) {
+      throw new IllegalStateException("z is invalid", e);
+    }
+    
     assertClassInvariants();
     return z;
   }
@@ -64,9 +83,11 @@ public class CarthesianCoordinate extends AbstractCoordinate {
   }
 
   @Override
-  public double getCarthesianDistance(Coordinate otherCoordinate) {
+  public double getCarthesianDistance(Coordinate otherCoordinate) throws IllegalArgumentException, ArithmeticException {
     assertClassInvariants();
-    assert (otherCoordinate != null) : "The other coordinate may not be null.";
+    if (otherCoordinate == null) {
+      throw new IllegalArgumentException("The other coordinate may not be null");
+    }
 
     CarthesianCoordinate otherCarthesianCoordinate = otherCoordinate.asCarthesianCoordinate();
 
@@ -82,12 +103,13 @@ public class CarthesianCoordinate extends AbstractCoordinate {
     double result = Math.sqrt(xSquared + ySquared + zSquared);
 
     assertValidCarthesianDistance(result);
+
     assertClassInvariants();
     return result;
   }
 
   @Override
-  public SphericCoordinate asSphericCoordinate() {
+  public SphericCoordinate asSphericCoordinate() throws ArithmeticException {
     assertClassInvariants();
 
     // Using "*" instead of Math.pow to increase performance.
@@ -117,9 +139,11 @@ public class CarthesianCoordinate extends AbstractCoordinate {
   }
 
   @Override
-  public double getCentralAngle(Coordinate otherCoordinate) {
+  public double getCentralAngle(Coordinate otherCoordinate) throws IllegalArgumentException,ArithmeticException {
     assertClassInvariants();
-    assert (otherCoordinate != null) : "The other coordinate may not be null.";
+    if (otherCoordinate == null) {
+      throw new IllegalArgumentException("The other coordinate may not be null");
+    }
 
     double distance = getCarthesianDistance(otherCoordinate);
     double result = 2 * Math.asin(distance / 2);
@@ -132,8 +156,10 @@ public class CarthesianCoordinate extends AbstractCoordinate {
   /**
    * Are the two passed floating point numbers equal (or within a small tolerance)?
    */
-  private static boolean isNearlyEqualDouble(double number1, double number2) {
-    assert (Double.isFinite(number1) && Double.isFinite(number2)) : "The numbers should be finite";
+  private static boolean isNearlyEqualDouble(double number1, double number2) throws IllegalArgumentException {
+    if (!Double.isFinite(number1) || !Double.isFinite(number2)) {
+      throw new IllegalArgumentException("The numbers should be finite");
+    }
 
     final double EPSILON = 0.00001;
 
@@ -175,9 +201,13 @@ public class CarthesianCoordinate extends AbstractCoordinate {
    * @param num The number to be rounded.
    * @param places The maximum number of decimals.
    */
-  private static double round(double num, int places) {
-    assert (Double.isFinite(num)) : "The number should be finite";
-    assert (places >= 0) : "The places should not be less than 0";
+  private static double round(double num, int places) throws IllegalArgumentException {
+    if (!Double.isFinite(num)) {
+      throw new IllegalArgumentException("The number should be finite");
+    }
+    if (places < 0) {
+      throw new IllegalArgumentException("The places should not be less than 0. But they were: " + places);
+    }
 
     double pow = Math.pow(10, places);
 
@@ -213,21 +243,34 @@ public class CarthesianCoordinate extends AbstractCoordinate {
   }
 
   @Override
-  public void assertClassInvariants() {
-    assertValidX(x);
-    assertValidY(y);
-    assertValidZ(z);
+  public void assertClassInvariants() throws IllegalStateException {
+    try {
+      assertValidX(x);
+      assertValidY(y);
+      assertValidZ(z);
+    } catch(ArithmeticException e) {
+      throw new IllegalStateException("The class invariants were violated.", e);
+    }    
   }
 
-  public static final void assertValidX(double x) {
-    assert (Double.isFinite(x)) : "x should be finite";
+  public static final void assertValidX(double x) throws ArithmeticException {
+    if (Double.isFinite(x)) {
+      return;
+    }
+    throw new ArithmeticException("x should be finite but was infinite");
   }
 
-  public static final void assertValidY(double y) {
-    assert (Double.isFinite(y)) : "y should be finite";
+  public static final void assertValidY(double y) throws ArithmeticException {
+    if (Double.isFinite(y)) {
+      return;
+    }
+    throw new ArithmeticException("y should be finite but was infinite");
   }
 
-  public static final void assertValidZ(double z) {
-    assert (Double.isFinite(z)) : "z should be finite";
+  public static final void assertValidZ(double z) throws ArithmeticException {
+    if (Double.isFinite(z)) {
+      return;
+    }
+    throw new ArithmeticException("z should be finite but was infinite");
   }
 }

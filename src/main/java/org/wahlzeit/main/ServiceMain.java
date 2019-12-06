@@ -34,6 +34,7 @@ import org.wahlzeit.services.SysConfig;
 import org.wahlzeit.webparts.WebPartTemplateService;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Logger;
 
@@ -231,7 +232,11 @@ public class ServiceMain extends ModelMain {
 				try {
 					URL url = getClass().getClassLoader().getResource(PICTURES_PATH);
 					File file = new File(url.getPath());
-					createUser("robot","Mr. Robot","robot@ecorp.com",file.getAbsolutePath());
+					try {
+						createUser("robot","Mr. Robot","robot@ecorp.com",file.getAbsolutePath());
+					} catch(IOException e) {
+						throw new RuntimeException("Unable to add default user", e);
+					}					
 				} catch (NullPointerException e) {
 					log.warning("Unable to create default user");
 				}

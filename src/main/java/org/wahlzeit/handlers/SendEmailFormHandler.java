@@ -32,6 +32,7 @@ import org.wahlzeit.services.mailing.EmailService;
 import org.wahlzeit.services.mailing.EmailServiceManager;
 import org.wahlzeit.webparts.WebPart;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -67,7 +68,7 @@ public class SendEmailFormHandler extends AbstractWebFormHandler {
 	/**
 	 *
 	 */
-	protected String doHandleGet(UserSession us, String link, Map args) {
+	protected String doHandleGet(UserSession us, String link, Map args) throws IOException {
 		if (!(us.getClient() instanceof User)) {
 			us.setHeading(us.getClient().getLanguageConfiguration().getInformation());
 			us.setMessage(us.getClient().getLanguageConfiguration().getNeedToSignupFirst());

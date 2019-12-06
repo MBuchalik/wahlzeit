@@ -20,6 +20,8 @@
 
 package org.wahlzeit.model;
 
+import java.io.IOException;
+
 import com.googlecode.objectify.annotation.Subclass;
 import org.wahlzeit.services.EmailAddress;
 
@@ -37,7 +39,7 @@ public class Guest extends Client {
 	/**
 	 *
 	 */
-	public Guest() {
+	public Guest() throws IOException {
 		String userId = GUEST_PREFIX + UserManager.getInstance().getNextClientId();
 		initialize(userId, userId, EmailAddress.EMPTY, AccessRights.GUEST, null);
 	}
@@ -46,7 +48,7 @@ public class Guest extends Client {
 	 * For logging out a user, some settings like the language or the photo size should not change, therefore the
 	 * previousClient is used so set these basic settings in the new <@link>Guest</@link>.
 	 */
-	public Guest(Client previousClient) {
+	public Guest(Client previousClient) throws IOException {
 		String userId = GUEST_PREFIX + UserManager.getInstance().getNextClientId();
 		initialize(userId, userId, EmailAddress.EMPTY, AccessRights.GUEST, previousClient);
 	}

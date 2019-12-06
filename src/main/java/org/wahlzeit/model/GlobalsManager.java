@@ -5,6 +5,7 @@ import com.googlecode.objectify.Work;
 import org.wahlzeit.services.ObjectManager;
 import org.wahlzeit.servlets.AbstractServlet;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import static org.wahlzeit.services.OfyService.ofy;
@@ -33,7 +34,11 @@ public class GlobalsManager extends ObjectManager {
 		Globals globals = ObjectifyService.run(new Work<Globals>() {
 			@Override
 			public Globals run() {
-				return readObject(Globals.class, Globals.DEAULT_ID);
+				try {
+					return readObject(Globals.class, Globals.DEAULT_ID);
+				} catch(IOException e) {
+					throw new RuntimeException("Unable to load Globals", e);
+				}				
 			}
 		});
 		log.info(globals.asString());
@@ -104,7 +109,12 @@ public class GlobalsManager extends ObjectManager {
 		ObjectifyService.run(new Work<Void>() {
 			@Override
 			public Void run() {
-				writeObject(globals);
+				try {
+					writeObject(globals);
+				} catch(IOException e) {
+					throw new RuntimeException("Unable to save a Global", e);
+				}
+				
 				return null;
 			}
 		});

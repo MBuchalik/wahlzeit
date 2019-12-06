@@ -3,6 +3,7 @@ package org.wahlzeit.model;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.ObjectManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +40,7 @@ public abstract class ClientManager extends ObjectManager {
 	 * @methodtype set
 	 * @methodproperty wrapper
 	 */
-	public void addClient(Client client) throws IllegalArgumentException {
+	public void addClient(Client client) throws IllegalArgumentException, IOException {
 		assertIsNonNullArgument(client);
 		assertIsUnknownClientAsIllegalArgument(client);
 		assertNicknameIsNotUsed(client.getNickName());
@@ -69,9 +70,14 @@ public abstract class ClientManager extends ObjectManager {
 	 * @methodtype set
 	 * @methodproperty primitive
 	 */
-	protected void doAddClient(Client client) {
+	protected void doAddClient(Client client) throws IOException {
 		idClientMap.put(client.getId(), client);
-		writeObject(client);
+		try {
+			writeObject(client);
+		} catch(IOException e) {
+			throw new IOException("Unable to add client", e);
+		}
+		
 		listOfUsedNicknames.add(client.getNickName());
 		log.config(LogBuilder.createSystemMessage().addParameter("Added new user", client.getId()).toString());
 	}
@@ -110,7 +116,7 @@ public abstract class ClientManager extends ObjectManager {
 	/**
 	 * @methodtype set
 	 */
-	public void addHttpSessionIdToClientMapping(String httpSessionId, Client client) {
+	public void addHttpSessionIdToClientMapping(String httpSessionId, Client client) throws IOException {
 		assertIsNonNullArgument(httpSessionId);
 		assertIsNonNullArgument(client);
 		assert !httpSessionIdToClientMap.containsKey(httpSessionId);
@@ -137,8 +143,12 @@ public abstract class ClientManager extends ObjectManager {
 	/**
 	 * @methodtype command
 	 */
-	public void saveClient(Client client) {
-		updateObject(client);
+	public void saveClient(Client client) throws IOException {
+		try {
+			updateObject(client);
+		} catch(IOException e) {
+			throw new IOException("Unable to save client", e);
+		}		
 	}
 
 
@@ -156,7 +166,7 @@ public abstract class ClientManager extends ObjectManager {
 	/**
 	 * @methodtype command
 	 */
-	public void saveClients() {
+	public void saveClients() throws IOException {
 		updateObjects(idClientMap.values());
 	}
 
@@ -190,7 +200,7 @@ public abstract class ClientManager extends ObjectManager {
 	/**
 	 * @methodtype set
 	 */
-	public void removeClient(Client client) {
+	public void removeClient(Client client) throws IOException {
 		saveClient(client);
 		idClientMap.remove(client.getId());
 	}
@@ -199,12 +209,17 @@ public abstract class ClientManager extends ObjectManager {
 	 * @methodtype set
 	 * @methodproperty wrapper
 	 */
-	public void deleteClient(Client client) {
+	public void deleteClient(Client client) throws IOException {
 		assertIsNonNullArgument(client);
 		assert idClientMap.containsValue(client);
 
 		removeHttpSessionIdToClientMapping(client.getHttpSessionId());
-		doDeleteClient(client);
+		
+		try {
+			doDeleteClient(client);
+		} catch(IOException e) {
+			throw new IOException("Unable to delete client", e);
+		}		
 
 		assertIsUnknownUserAsIllegalState(client);
 	}
@@ -223,7 +238,7 @@ public abstract class ClientManager extends ObjectManager {
 	 * @methodtype set
 	 * @methodproperty primtive
 	 */
-	protected void doDeleteClient(Client client) {
+	protected void doDeleteClient(Client client) throws IOException {
 		idClientMap.remove(client.getId());
 		deleteObject(client);
 	}

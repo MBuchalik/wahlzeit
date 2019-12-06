@@ -20,6 +20,8 @@
 
 package org.wahlzeit.model;
 
+import java.io.IOException;
+
 import com.googlecode.objectify.annotation.Subclass;
 import org.wahlzeit.services.EmailAddress;
 
@@ -32,15 +34,19 @@ public class Moderator extends User {
 	/**
 	 *
 	 */
-	public Moderator(String id, String myName, String myEmailAddress, Client previousClient) {
+	public Moderator(String id, String myName, String myEmailAddress, Client previousClient) throws IOException {
 		this(id, myName, EmailAddress.getFromString(myEmailAddress), previousClient);
 	}
 
 	/**
 	 *
 	 */
-	public Moderator(String userId, String nickname, EmailAddress emailAddress, Client previousClient) {
-		initialize(userId, nickname, emailAddress, AccessRights.MODERATOR, previousClient);
+	public Moderator(String userId, String nickname, EmailAddress emailAddress, Client previousClient) throws IOException {
+		try {
+			initialize(userId, nickname, emailAddress, AccessRights.MODERATOR, previousClient);
+		} catch(IOException e) {
+			throw new IOException("Unable to initialize a Moderator", e);
+		}		
 	}
 
 	/**

@@ -20,6 +20,8 @@
 
 package org.wahlzeit.model;
 
+import java.io.IOException;
+
 import com.googlecode.objectify.annotation.Subclass;
 import org.wahlzeit.services.EmailAddress;
 
@@ -33,15 +35,19 @@ public class Administrator extends Moderator {
 	/**
 	 *
 	 */
-	public Administrator(String userId, String nickName, String myEmailAddress, Client previousClient) {
+	public Administrator(String userId, String nickName, String myEmailAddress, Client previousClient) throws IOException {
 		this(userId, nickName, EmailAddress.getFromString(myEmailAddress), previousClient);
 	}
 
 	/**
 	 *
 	 */
-	public Administrator(String userId, String nickName, EmailAddress emailAddress, Client previousClient) {
-		initialize(userId, nickName, emailAddress, AccessRights.ADMINISTRATOR, previousClient);
+	public Administrator(String userId, String nickName, EmailAddress emailAddress, Client previousClient) throws IOException {
+		try {
+			initialize(userId, nickName, emailAddress, AccessRights.ADMINISTRATOR, previousClient);
+		} catch(IOException e) {
+			throw new IOException("Unable to initialize Administrator", e);
+		}		
 	}
 
 	/**

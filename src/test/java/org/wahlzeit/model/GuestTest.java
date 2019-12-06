@@ -11,6 +11,8 @@ import org.wahlzeit.testEnvironmentProvider.RegisteredOfyEnvironmentProvider;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.IOException;
+
 /**
  * Test class for {@link Guest}.
  */
@@ -31,8 +33,12 @@ public class GuestTest {
 		ObjectifyService.run(new Work<Void>() {
 			@Override
 			public Void run() {
-				new User("1337", "han", "star@wa.rs");
-				return null;
+				try {
+					new User("1337", "han", "star@wa.rs");
+					return null;
+				} catch(IOException e) {
+					throw new RuntimeException("Creation of a new user failed");
+				}	
 			}
 		});
 		assertNewGuestHasId(++clientId);
@@ -48,7 +54,11 @@ public class GuestTest {
 		Guest testGuest = ObjectifyService.run(new Work<Guest>() {
 			@Override
 			public Guest run() {
-				return new Guest();
+				try {
+					return new Guest();
+				} catch(IOException e) {
+					throw new RuntimeException("Unable to create a new Guest", e);
+				}				
 			}
 		});
 		String userName = testGuest.getId();

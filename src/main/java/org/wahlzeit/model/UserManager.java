@@ -27,6 +27,7 @@ import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.mailing.EmailService;
 import org.wahlzeit.services.mailing.EmailServiceManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -90,7 +91,11 @@ public class UserManager extends ClientManager {
 
 				for (User user : existingUser) {
 					if (!hasClientById(user.getId())) {
-						doAddClient(user);
+						try {
+							doAddClient(user);
+						} catch(IOException e) {
+							throw new RuntimeException("Unable to load user", e);
+						}						
 					} else {
 						log.config(LogBuilder.createSystemMessage().addParameter("user has been loaded", user.getId())
 								.toString());
@@ -131,21 +136,25 @@ public class UserManager extends ClientManager {
 	/**
 	 *
 	 */
-	public User getUserByEmailAddress(String emailAddress) {
+	public User getUserByEmailAddress(String emailAddress) throws IOException {
 		return getUserByEmailAddress(EmailAddress.getFromString(emailAddress));
 	}
 
 	/**
 	 *
 	 */
-	public User getUserByEmailAddress(EmailAddress emailAddress) {
+	public User getUserByEmailAddress(EmailAddress emailAddress) throws IOException {
 		User result;
 		result = readObject(User.class, User.EMAIL_ADDRESS, emailAddress.asString());
 
 		if (result != null) {
 			User current = getUserById(result.getId());
 			if (current == null) {
-				doAddClient(result);
+				try {
+					doAddClient(result);
+				} catch(IOException e) {
+					throw new IOException("Unable to add client", e);
+				}				
 			} else {
 				result = current;
 			}

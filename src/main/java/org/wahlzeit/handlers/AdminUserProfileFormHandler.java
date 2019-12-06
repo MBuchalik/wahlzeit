@@ -33,6 +33,7 @@ import org.wahlzeit.utils.HtmlUtil;
 import org.wahlzeit.utils.StringUtil;
 import org.wahlzeit.webparts.WebPart;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -78,7 +79,7 @@ public class AdminUserProfileFormHandler extends AbstractWebFormHandler {
 	/**
 	 *
 	 */
-	protected String doHandlePost(UserSession us, Map args) {
+	protected String doHandlePost(UserSession us, Map args) throws IOException {
 		UserManager um = UserManager.getInstance();
 		String userId = us.getAndSaveAsString(args, "userId");
 		User user = um.getUserById(userId);

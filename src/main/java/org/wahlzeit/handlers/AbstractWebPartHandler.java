@@ -38,6 +38,7 @@ import org.wahlzeit.webparts.WebPartTemplate;
 import org.wahlzeit.webparts.WebPartTemplateService;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -234,7 +235,7 @@ public abstract class AbstractWebPartHandler implements WebPartHandler {
 	/**
 	 * @param args TODO
 	 */
-	protected String doHandleGet(UserSession us, String link, Map args) {
+	protected String doHandleGet(UserSession us, String link, Map args) throws IOException {
 		return link;
 	}
 

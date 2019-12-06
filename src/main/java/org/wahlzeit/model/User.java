@@ -27,6 +27,7 @@ import org.wahlzeit.services.EmailAddress;
 import org.wahlzeit.services.Language;
 import org.wahlzeit.services.LogBuilder;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -85,21 +86,21 @@ public class User extends Client {
 	/**
 	 *
 	 */
-	public User(String id, String myName, String myEmailAddress) {
+	public User(String id, String myName, String myEmailAddress) throws IOException {
 		this(id, myName, EmailAddress.getFromString(myEmailAddress), null);
 	}
 
 	/**
 	 *
 	 */
-	public User(String id, String myName, String myEmailAddress, Client previousClient) {
+	public User(String id, String myName, String myEmailAddress, Client previousClient) throws IOException {
 		this(id, myName, EmailAddress.getFromString(myEmailAddress), previousClient);
 	}
 
 	/**
 	 *
 	 */
-	public User(String id, String nickname, EmailAddress emailAddress, Client previousClient) {
+	public User(String id, String nickname, EmailAddress emailAddress, Client previousClient) throws IOException {
 		initialize(id, nickname, emailAddress, AccessRights.USER, previousClient);
 	}
 
@@ -107,8 +108,12 @@ public class User extends Client {
 	 * @methodtype initialization
 	 */
 	protected void initialize(String id, String nickName, EmailAddress emailAddress, AccessRights accessRights,
-							  Client previousClient) {
-		super.initialize(id, nickName, emailAddress, accessRights, previousClient);
+							  Client previousClient) throws IOException {
+		try {
+			super.initialize(id, nickName, emailAddress, accessRights, previousClient);
+		} catch(IOException e) {
+			throw new IOException("Unable to initialize user", e);
+		}		
 
 		log.config(LogBuilder.createSystemMessage().
 				addAction("initialize user").

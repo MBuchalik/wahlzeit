@@ -5,7 +5,11 @@ public class PalacePhoto extends Photo {
 		super();
 	}
 
-	public PalacePhoto(PhotoId myId) {
+	public PalacePhoto(PhotoId myId) throws IllegalArgumentException {
 		super(myId);
+
+		if (myId == null) {
+			throw new IllegalArgumentException("The Photo ID may not be null");
+		}
 	}
 }

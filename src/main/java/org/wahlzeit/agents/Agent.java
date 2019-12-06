@@ -22,6 +22,7 @@ package org.wahlzeit.agents;
 
 import org.wahlzeit.services.LogBuilder;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -83,7 +84,7 @@ public abstract class Agent {
 	/**
 	 * @methodproperty hook
 	 */
-	protected void doRun() {
+	protected void doRun() throws IOException {
 		// do nothing
 	}
 

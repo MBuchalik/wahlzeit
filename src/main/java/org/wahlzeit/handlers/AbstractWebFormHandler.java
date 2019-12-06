@@ -25,6 +25,7 @@ import org.wahlzeit.model.UserSession;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.webparts.WebPart;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -93,7 +94,7 @@ public abstract class AbstractWebFormHandler extends AbstractWebPartHandler impl
 	/**
 	 *
 	 */
-	protected String doHandlePost(UserSession us, Map args) {
+	protected String doHandlePost(UserSession us, Map args) throws IOException {
 		return PartUtil.DEFAULT_PAGE_NAME;
 	}
 

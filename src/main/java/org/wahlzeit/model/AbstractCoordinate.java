@@ -2,9 +2,12 @@ package org.wahlzeit.model;
 
 public abstract class AbstractCoordinate implements Coordinate {
   @Override
-  public double getCarthesianDistance(Coordinate otherCoordinate) {
+  public double getCarthesianDistance(Coordinate otherCoordinate) throws IllegalArgumentException, ArithmeticException {
     assertClassInvariants();
-    assert (otherCoordinate != null) : "The other coordinate may not be null.";
+
+    if (otherCoordinate == null) {
+      throw new IllegalArgumentException("The other coordinate may not be null");
+    }
 
     CarthesianCoordinate myCarthesianCoordinate = this.asCarthesianCoordinate();
     double result = myCarthesianCoordinate.getCarthesianDistance(otherCoordinate);
@@ -27,9 +30,12 @@ public abstract class AbstractCoordinate implements Coordinate {
   }
 
   @Override
-  public double getCentralAngle(Coordinate otherCoordinate) {
+  public double getCentralAngle(Coordinate otherCoordinate) throws IllegalArgumentException {
     assertClassInvariants();
-    assert (otherCoordinate != null) : "The other coordinate may not be null.";
+    
+    if (otherCoordinate == null) {
+      throw new IllegalArgumentException("The other coordinate may not be null");
+    }
 
     CarthesianCoordinate myCarthesianCoordinate = this.asCarthesianCoordinate();
     double result = myCarthesianCoordinate.getCentralAngle(otherCoordinate);
@@ -71,13 +77,19 @@ public abstract class AbstractCoordinate implements Coordinate {
     return result;
   }
 
-  public static final void assertValidCarthesianDistance(double distance) {
+  public static final void assertValidCarthesianDistance(double distance) throws ArithmeticException {
     boolean isValid = Double.isFinite(distance) && distance >= 0;
-    assert (isValid) : "The Carthesian Distance should not be less than 0.";
+    if (isValid) {
+      return;
+    }
+    throw new ArithmeticException("The carthesian distance is invalid: " + distance);
   }
 
-  public final void assertValidCentralAngle(double angle) {
+  public final void assertValidCentralAngle(double angle) throws ArithmeticException {
     boolean isValid = Double.isFinite(angle) && angle >= -Math.PI && angle <= Math.PI;
-    assert (isValid) : "The Central Angle should not be less than 0.";
+    if (isValid) {
+      return;
+    }
+    throw new ArithmeticException("The Central Angle should not be less than 0.");
   }
 }

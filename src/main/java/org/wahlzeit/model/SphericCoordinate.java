@@ -12,10 +12,14 @@ public class SphericCoordinate extends AbstractCoordinate {
    * @param phi The Phi value in radians. It should be in the range of -Pi to Pi.
    * @param theta The Theta value in radians. It should be in the range of 0 to Pi.
    */
-  SphericCoordinate(double radius, double phi, double theta) {
-    assertValidRadius(radius);
-    assertValidPhi(phi);
-    assertValidTheta(theta);
+  SphericCoordinate(double radius, double phi, double theta) throws IllegalArgumentException {
+    try {
+      assertValidRadius(radius);
+      assertValidPhi(phi);
+      assertValidTheta(theta);
+    } catch(ArithmeticException e) {
+      throw new IllegalArgumentException("Unable to construct a new SphericCoordinate due to bad arguments", e);
+    }    
 
     this.radius = radius;
     this.phi = phi;
@@ -29,8 +33,13 @@ public class SphericCoordinate extends AbstractCoordinate {
    * 
    * @methodtype get
    */
-  public double getRadius() {
-    assertValidRadius(radius);
+  public double getRadius() throws IllegalStateException {
+    try {
+      assertValidRadius(radius);
+    } catch(ArithmeticException e) {
+      throw new IllegalStateException("radius is invalid", e);
+    }
+
     assertClassInvariants();
     return radius;
   }
@@ -40,8 +49,13 @@ public class SphericCoordinate extends AbstractCoordinate {
    * 
    * @methodtype get
    */
-  public double getPhi() {
-    assertValidPhi(phi);
+  public double getPhi() throws IllegalStateException {
+    try {
+      assertValidPhi(phi);
+    } catch(ArithmeticException e) {
+      throw new IllegalStateException("phi is invalid", e);
+    }
+    
     assertClassInvariants();
     return phi;
   }
@@ -51,14 +65,19 @@ public class SphericCoordinate extends AbstractCoordinate {
    * 
    * @methodtype get
    */
-  public double getTheta() {
-    assertValidTheta(theta);
+  public double getTheta() throws IllegalStateException {
+    try {
+      assertValidTheta(theta);
+    } catch(ArithmeticException e) {
+      throw new IllegalStateException("theta is invalid", e);
+    }
+
     assertClassInvariants();
     return theta;
   }
 
   @Override
-  public CarthesianCoordinate asCarthesianCoordinate() {
+  public CarthesianCoordinate asCarthesianCoordinate() throws ArithmeticException {
     assertClassInvariants();
 
     // For the formula, see
@@ -85,24 +104,37 @@ public class SphericCoordinate extends AbstractCoordinate {
   }
 
   @Override
-  public void assertClassInvariants() {
-    assertValidRadius(radius);
-    assertValidPhi(phi);
-    assertValidTheta(theta);
+  public void assertClassInvariants() throws IllegalStateException {
+    try {
+      assertValidRadius(radius);
+      assertValidPhi(phi);
+      assertValidTheta(theta);
+    } catch(ArithmeticException e) {
+      throw new IllegalStateException("The class invariants were violated.", e);
+    }    
   }
 
-  public static final void assertValidTheta(double theta) {
+  public static final void assertValidTheta(double theta) throws ArithmeticException {
     boolean isValid = Double.isFinite(theta) && theta >= 0 && theta <= Math.PI;
-    assert (isValid) : "The given theta (" + theta + ") is not valid";
+    if (isValid) {
+      return;
+    }
+    throw new ArithmeticException("The given theta (" + theta + ") is not valid");
   }
 
-  public static final void assertValidPhi(double phi) {
+  public static final void assertValidPhi(double phi) throws ArithmeticException {
     boolean isValid = Double.isFinite(phi) && phi >= -Math.PI && phi <= Math.PI;
-    assert (isValid) : "The given phi (" + phi + ") is not valid";
+    if (isValid) {
+      return;
+    }
+    throw new ArithmeticException("The given phi (" + phi + ") is not valid");
   }
 
-  public static final void assertValidRadius(double radius) {
+  public static final void assertValidRadius(double radius) throws ArithmeticException {
     boolean isValid = Double.isFinite(radius) && radius >= 0;
-    assert (isValid) : "The given radius (" + radius + ") is not valid";
+    if (isValid) {
+      return;
+    }
+    throw new ArithmeticException("The given radius (" + radius + ") is not valid");
   }
 }

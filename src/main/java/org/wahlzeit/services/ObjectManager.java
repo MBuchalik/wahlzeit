@@ -23,6 +23,7 @@ package org.wahlzeit.services;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
@@ -44,13 +45,26 @@ public abstract class ObjectManager {
 	/**
 	 * Reads the first Entity with the given key in the Datastore
 	 */
-	protected <E> E readObject(Class<E> type, Long id) throws IllegalArgumentException {
+	protected <E> E readObject(Class<E> type, Long id) throws IllegalArgumentException, IOException {
 		assertIsNonNullArgument(type, "type");
 		assertIsNonNullArgument(id, "id");
 
 		log.config(LogBuilder.createSystemMessage().
 				addMessage("Load Type " + type.toString() + " with ID " + id + " from datastore.").toString());
-		return OfyService.ofy().load().type(type).id(id).now();
+		
+		final int maxNumberOfAttempts = 3;
+		E result;
+		Exception lastException = null;
+		for (int i = 0; i < maxNumberOfAttempts; i++) {
+			try {
+				result = OfyService.ofy().load().type(type).id(id).now();
+				return result;
+			} catch(Exception e) {
+				lastException = e;
+			}			 
+		}
+
+		throw new IOException("Unable to load an object from the Datastore", lastException);		
 	}
 
 	/**
@@ -129,7 +143,7 @@ public abstract class ObjectManager {
 	/**
 	 * Updates all entities of the given collection in the datastore.
 	 */
-	protected void updateObjects(Collection<? extends Persistent> collection) {
+	protected void updateObjects(Collection<? extends Persistent> collection) throws IOException {
 		for (Persistent object : collection) {
 			updateObject(object);
 		}
@@ -138,22 +152,35 @@ public abstract class ObjectManager {
 	/**
 	 * Updates the given entity in the datastore.
 	 */
-	protected void updateObject(Persistent object) {
+	protected void updateObject(Persistent object) throws IOException {
 		writeObject(object);
 	}
 
 	/**
 	 * Writes the given entity to the datastore.
 	 */
-	protected void writeObject(Persistent object) {
+	protected void writeObject(Persistent object) throws IOException {
 		assertIsNonNullArgument(object, "object");
 
 		if (object.isDirty()) {
 			log.info(LogBuilder.createSystemMessage().
 					addParameter("Datastore: Write object of type", object).toString());
-			OfyService.ofy().save().entity(object).now();
-			updateDependents(object);
-			object.resetWriteCount();
+			
+			final int maxNumberOfAttempts = 3;
+			Exception lastException = null;
+			for (int i = 0; i < maxNumberOfAttempts; i++) {
+				try {
+					OfyService.ofy().save().entity(object).now();
+					updateDependents(object);
+					object.resetWriteCount();
+					break;
+				} catch(Exception e) {
+					lastException = e;
+				}
+			}
+			if (lastException != null) {
+				throw new IOException("Unable to write the Object", lastException);
+			}
 		} else {
 			log.info(LogBuilder.createSystemMessage().
 					addParameter("Datastore: No need to update object", object).toString());
@@ -163,18 +190,23 @@ public abstract class ObjectManager {
 	/**
 	 * Updates all dependencies of the object.
 	 */
-	protected void updateDependents(Persistent object) {
+	protected void updateDependents(Persistent object) throws IOException {
 		// overwrite if your object has additional dependencies
 	}
 
 	/**
 	 * Deletes the given entity from the datastore.
 	 */
-	protected <E> void deleteObject(E object) {
+	protected <E> void deleteObject(E object) throws IOException {
 		assertIsNonNullArgument(object, "object");
 
 		log.config(LogBuilder.createSystemMessage().addParameter("Datastore: delete entity", object).toString());
-		OfyService.ofy().delete().entity(object).now();
+
+		try {
+			OfyService.ofy().delete().entity(object).now();
+		} catch(Exception e) {
+			throw new IOException("Unable to delete an object", e);
+		}		
 	}
 
 	/**

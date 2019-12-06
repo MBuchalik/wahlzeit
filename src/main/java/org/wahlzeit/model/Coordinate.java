@@ -16,7 +16,7 @@ public interface Coordinate {
    *
    * @param otherCoordinate The other coordinate the distance should be computed with.
    */
-  public double getCarthesianDistance(Coordinate otherCoordinate);
+  public double getCarthesianDistance(Coordinate otherCoordinate) throws ArithmeticException;
 
   /**
   * Convert this Coordinate to a Spheric Coordinate.
@@ -29,7 +29,7 @@ public interface Coordinate {
    * Calculate the Central Angle, see https://en.wikipedia.org/wiki/Great-circle_distance
    * @param otherCoordinate The other coordinate the Central Angle should be computed with.
    */
-  public double getCentralAngle(Coordinate otherCoordinate);
+  public double getCentralAngle(Coordinate otherCoordinate) throws ArithmeticException;
 
   /**
    * Is the passed object equal to this one?
@@ -41,5 +41,5 @@ public interface Coordinate {
   /**
    * Check whether the class invariants are fulfilled.
    */
-  public void assertClassInvariants();
+  public void assertClassInvariants() throws IllegalStateException;
 }

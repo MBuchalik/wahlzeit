@@ -30,6 +30,7 @@ import org.wahlzeit.services.Language;
 import org.wahlzeit.services.ObjectManager;
 import org.wahlzeit.services.Persistent;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +89,7 @@ public abstract class Client implements Serializable, Persistent {
 	 * @methodtype initialization
 	 */
 	protected void initialize(String id, String nickName, EmailAddress emailAddress, AccessRights accessRights,
-							  Client previousClient) {
+							  Client previousClient) throws IOException {
 		this.id = id;
 		this.nickName = nickName;
 		this.accessRights = accessRights;
@@ -103,7 +104,11 @@ public abstract class Client implements Serializable, Persistent {
 
 		incWriteCount();
 
-		UserManager.getInstance().addClient(this);
+		try {
+			UserManager.getInstance().addClient(this);
+		} catch(Exception e) {
+			throw new IOException("Unable to initialize client", e);
+		}		
 	}
 
 	/**

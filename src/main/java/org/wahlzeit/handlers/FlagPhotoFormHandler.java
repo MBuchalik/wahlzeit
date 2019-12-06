@@ -36,6 +36,7 @@ import org.wahlzeit.services.mailing.EmailServiceManager;
 import org.wahlzeit.utils.StringUtil;
 import org.wahlzeit.webparts.WebPart;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -80,7 +81,7 @@ public class FlagPhotoFormHandler extends AbstractWebFormHandler {
 	/**
 	 *
 	 */
-	protected String doHandlePost(UserSession us, Map args) {
+	protected String doHandlePost(UserSession us, Map args) throws IOException {
 		String id = us.getAndSaveAsString(args, Photo.ID);
 		String flagger = us.getAndSaveAsString(args, PhotoCase.FLAGGER);
 		FlagReason reason = FlagReason.getFromString(us.getAndSaveAsString(args, PhotoCase.REASON));

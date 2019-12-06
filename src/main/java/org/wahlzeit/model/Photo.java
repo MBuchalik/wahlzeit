@@ -33,6 +33,7 @@ import org.wahlzeit.services.Language;
 import org.wahlzeit.services.ObjectManager;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * A photo represents a user-provided (uploaded) photo.
@@ -153,8 +154,12 @@ public class Photo extends DataObject {
 	/**
 	 * @methodtype get
 	 */
-	public Image getImage(PhotoSize photoSize) {
-		return images.get(photoSize);
+	public Image getImage(PhotoSize photoSize) throws NoSuchElementException {
+		Image result = images.get(photoSize);
+		if (result == null) {
+			throw new NoSuchElementException("The image for photo size " + photoSize.toString() + " could not be found");
+		}
+		return result;
 	}
 
 	/**
@@ -204,7 +209,11 @@ public class Photo extends DataObject {
 	 * @methodtype get
 	 */
 	public String getCaption(ModelConfig cfg) {
-		String ownerName = UserManager.getInstance().getUserById(ownerId).getNickName();
+		User user = UserManager.getInstance().getUserById(ownerId);
+		if (user == null) {
+			throw new IllegalStateException("The owner of the image does not exist. Owner ID: " + ownerId);
+		}
+		String ownerName = user.getNickName();
 		return cfg.asPhotoCaption(ownerName);
 	}
 
@@ -242,20 +251,30 @@ public class Photo extends DataObject {
 	 * @methodtype boolean-query
 	 */
 	public boolean hasSameOwner(Photo photo) {
-		return photo.getOwnerEmailAddress().equals(ownerEmailAddress);
+		EmailAddress otherEmailAddress = photo.getOwnerEmailAddress();
+		if (otherEmailAddress == null || ownerEmailAddress == null) {
+			throw new IllegalStateException("The email addresses may not be null");
+		}
+		return otherEmailAddress.equals(ownerEmailAddress);
 	}
 
 	/**
 	 * @methodtype get
 	 */
 	public EmailAddress getOwnerEmailAddress() {
+		if (ownerEmailAddress == null) {
+			throw new IllegalStateException("The email address may not be null");
+		}
 		return ownerEmailAddress;
 	}
 
 	/**
 	 * @methodtype set
 	 */
-	public void setOwnerEmailAddress(EmailAddress newEmailAddress) {
+	public void setOwnerEmailAddress(EmailAddress newEmailAddress) throws IllegalArgumentException {
+		if (newEmailAddress == null) {
+			throw new IllegalArgumentException("The new email address may not be null");
+		}
 		ownerEmailAddress = newEmailAddress;
 		incWriteCount();
 	}
@@ -357,13 +376,19 @@ public class Photo extends DataObject {
 	 * @methodtype get
 	 */
 	public PhotoStatus getStatus() {
+		if (status == null) {
+			throw new IllegalStateException("The photo status is null");
+		}
 		return status;
 	}
 
 	/**
 	 * @methodtype set
 	 */
-	public void setStatus(PhotoStatus newStatus) {
+	public void setStatus(PhotoStatus newStatus) throws IllegalArgumentException {
+		if (newStatus == null) {
+			throw new IllegalArgumentException("The new status is null");
+		}
 		status = newStatus;
 		incWriteCount();
 	}
@@ -372,6 +397,9 @@ public class Photo extends DataObject {
 	 * @methodtype boolean-query
 	 */
 	public boolean hasTag(String tag) {
+		if (tags == null) {
+			throw new IllegalStateException("The tags are null");
+		}
 		return tags.hasTag(tag);
 	}
 
@@ -379,13 +407,20 @@ public class Photo extends DataObject {
 	 * @methodtype get
 	 */
 	public Tags getTags() {
+		if (tags == null) {
+			throw new IllegalStateException("The tags are null");
+		}
 		return tags;
 	}
 
 	/**
 	 * @methodtype set
 	 */
-	public void setTags(Tags newTags) {
+	public void setTags(Tags newTags) throws IllegalArgumentException {
+		if (newTags == null) {
+			throw new IllegalArgumentException("The new tags are null");
+		}
+
 		tags = newTags;
 		incWriteCount();
 	}
@@ -439,7 +474,10 @@ public class Photo extends DataObject {
 	 * Set the Location of this Photo.
 	 * @param location The Location to set.
 	 */
-	public void setLocation(Location location) {
+	public void setLocation(Location location) throws IllegalArgumentException {
+		if (location == null) {
+			throw new IllegalArgumentException("The location may not be null");
+		}
 		this.location = location;
 	}
 }

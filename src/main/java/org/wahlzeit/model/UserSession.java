@@ -25,6 +25,8 @@ import org.wahlzeit.services.Session;
 import org.wahlzeit.utils.HtmlUtil;
 
 import javax.servlet.http.HttpSession;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -61,7 +63,7 @@ public class UserSession extends Session implements Serializable {
 	/**
 	 *
 	 */
-	public UserSession(String myName, String mySiteUrl, HttpSession myHttpSession, String myLanguage) {
+	public UserSession(String myName, String mySiteUrl, HttpSession myHttpSession, String myLanguage) throws IOException {
 		httpSession = myHttpSession;
 		initialize(myName);
 		if (httpSession.getAttribute(INITIALIZED) == null) {
@@ -154,12 +156,16 @@ public class UserSession extends Session implements Serializable {
 	/**
 	 * @methodtype set
 	 */
-	public void setClient(Client newClient) {
+	public void setClient(Client newClient) throws IOException {
 		String previousClientId = (String) httpSession.getAttribute(CLIENT_ID);
 		if (previousClientId != null) {
 			Client previousClient = UserManager.getInstance().getClientById(previousClientId);
 			if (previousClient instanceof Guest) {
-				UserManager.getInstance().deleteClient(previousClient);
+				try {
+					UserManager.getInstance().deleteClient(previousClient);
+				} catch(IOException e) {
+					throw new IOException("Unable to delete previous client", e);
+				}				
 			}
 		}
 

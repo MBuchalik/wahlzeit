@@ -32,6 +32,7 @@ import org.wahlzeit.utils.HtmlUtil;
 import org.wahlzeit.utils.StringUtil;
 import org.wahlzeit.webparts.WebPart;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -82,7 +83,7 @@ public class EditPhotoCaseFormHandler extends AbstractWebFormHandler {
 	/**
 	 *
 	 */
-	protected String doHandlePost(UserSession us, Map args) {
+	protected String doHandlePost(UserSession us, Map args) throws IOException {
 		String id = us.getAndSaveAsString(args, PhotoCase.ID);
 		PhotoCaseManager pcm = PhotoCaseManager.getInstance();
 

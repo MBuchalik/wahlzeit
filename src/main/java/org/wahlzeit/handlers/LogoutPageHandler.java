@@ -28,6 +28,7 @@ import org.wahlzeit.model.UserSession;
 import org.wahlzeit.utils.HtmlUtil;
 import org.wahlzeit.webparts.WebPart;
 
+import java.io.IOException;
 import java.util.Map;
 
 
@@ -46,7 +47,7 @@ public class LogoutPageHandler extends AbstractWebPageHandler {
 	/**
 	 *
 	 */
-	protected String doHandleGet(UserSession us, String link, Map args) {
+	protected String doHandleGet(UserSession us, String link, Map args) throws IOException {
 		Client previousClient = us.getClient();
 		us.setClient(new Guest(previousClient));
 		us.clearSavedArgs();
