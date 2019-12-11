@@ -32,7 +32,7 @@ public abstract class AbstractCoordinate implements Coordinate {
   @Override
   public double getCentralAngle(Coordinate otherCoordinate) throws IllegalArgumentException {
     assertClassInvariants();
-    
+
     if (otherCoordinate == null) {
       throw new IllegalArgumentException("The other coordinate may not be null");
     }
@@ -77,6 +77,11 @@ public abstract class AbstractCoordinate implements Coordinate {
     return result;
   }
 
+  @Override
+  protected Coordinate clone() {
+    return this;
+  }
+
   public static final void assertValidCarthesianDistance(double distance) throws ArithmeticException {
     boolean isValid = Double.isFinite(distance) && distance >= 0;
     if (isValid) {
@@ -91,5 +96,31 @@ public abstract class AbstractCoordinate implements Coordinate {
       return;
     }
     throw new ArithmeticException("The Central Angle should not be less than 0.");
+  }
+
+  /**
+   * Round a value to have a maximum of "places" decimals.
+   * @param num The number to be rounded.
+   * @param places The maximum number of decimals.
+   */
+  protected static double round(double num, int places) throws IllegalArgumentException {
+    if (!Double.isFinite(num)) {
+      throw new IllegalArgumentException("The number should be finite");
+    }
+    if (places < 0) {
+      throw new IllegalArgumentException("The places should not be less than 0. But they were: " + places);
+    }
+
+    double pow = Math.pow(10, places);
+
+    double result;
+
+    result = num * pow;
+    result = Math.round(result);
+    result = result / pow;
+
+    assert (Double.isFinite(result)) : "The result should be finite";
+
+    return result;
   }
 }

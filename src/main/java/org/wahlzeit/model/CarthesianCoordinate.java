@@ -1,6 +1,10 @@
 package org.wahlzeit.model;
 
+import java.util.HashMap;
+
 public class CarthesianCoordinate extends AbstractCoordinate {
+  private static final HashMap<Integer, CarthesianCoordinate> map = new HashMap<>();
+
   private final double x;
   private final double y;
   private final double z;
@@ -12,20 +16,46 @@ public class CarthesianCoordinate extends AbstractCoordinate {
    * 
    * @methodtype constructor
    */
-  CarthesianCoordinate(double x, double y, double z) throws IllegalArgumentException {
+  private CarthesianCoordinate(double x, double y, double z) throws IllegalArgumentException {
     try {
       assertValidX(x);
       assertValidY(y);
       assertValidZ(z);
-    } catch(ArithmeticException e) {
+    } catch (ArithmeticException e) {
       throw new IllegalArgumentException("Unable to construct a new CarthesianCoordinate due to bad arguments", e);
-    }    
+    }
 
     this.x = x;
     this.y = y;
     this.z = z;
 
     assertClassInvariants();
+  }
+
+  public static CarthesianCoordinate getCoordinate(double x, double y, double z) throws IllegalArgumentException {
+    try {
+      assertValidX(x);
+      assertValidY(y);
+      assertValidZ(z);
+    } catch (ArithmeticException e) {
+      throw new IllegalArgumentException("Unable to get the CarthesianCoordinate due to bad arguments", e);
+    }
+
+    int fingerprint = calculateAttributeFingerprint(x, y, z);
+    CarthesianCoordinate result = map.get(fingerprint);
+
+    if (result == null) {
+      synchronized (map) {
+        result = map.get(fingerprint);
+
+        if (result == null) {
+          result = new CarthesianCoordinate(x, y, z);
+          map.put(fingerprint, result);
+        }
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -36,10 +66,10 @@ public class CarthesianCoordinate extends AbstractCoordinate {
   public double getX() throws IllegalStateException {
     try {
       assertValidX(x);
-    } catch(ArithmeticException e) {
+    } catch (ArithmeticException e) {
       throw new IllegalStateException("x is invalid", e);
     }
-    
+
     assertClassInvariants();
     return x;
   }
@@ -52,10 +82,10 @@ public class CarthesianCoordinate extends AbstractCoordinate {
   public double getY() throws IllegalStateException {
     try {
       assertValidY(y);
-    } catch(ArithmeticException e) {
+    } catch (ArithmeticException e) {
       throw new IllegalStateException("y is invalid", e);
     }
-    
+
     assertClassInvariants();
     return y;
   }
@@ -68,10 +98,10 @@ public class CarthesianCoordinate extends AbstractCoordinate {
   public double getZ() throws IllegalStateException {
     try {
       assertValidZ(z);
-    } catch(ArithmeticException e) {
+    } catch (ArithmeticException e) {
       throw new IllegalStateException("z is invalid", e);
     }
-    
+
     assertClassInvariants();
     return z;
   }
@@ -132,14 +162,14 @@ public class CarthesianCoordinate extends AbstractCoordinate {
     SphericCoordinate.assertValidPhi(phi);
     SphericCoordinate.assertValidTheta(theta);
 
-    SphericCoordinate result = new SphericCoordinate(radius, phi, theta);
+    SphericCoordinate result = SphericCoordinate.getCoordinate(radius, phi, theta);
 
     assertClassInvariants();
     return result;
   }
 
   @Override
-  public double getCentralAngle(Coordinate otherCoordinate) throws IllegalArgumentException,ArithmeticException {
+  public double getCentralAngle(Coordinate otherCoordinate) throws IllegalArgumentException, ArithmeticException {
     assertClassInvariants();
     if (otherCoordinate == null) {
       throw new IllegalArgumentException("The other coordinate may not be null");
@@ -151,22 +181,6 @@ public class CarthesianCoordinate extends AbstractCoordinate {
     assertValidCentralAngle(result);
     assertClassInvariants();
     return result;
-  }
-
-  /**
-   * Are the two passed floating point numbers equal (or within a small tolerance)?
-   */
-  private static boolean isNearlyEqualDouble(double number1, double number2) throws IllegalArgumentException {
-    if (!Double.isFinite(number1) || !Double.isFinite(number2)) {
-      throw new IllegalArgumentException("The numbers should be finite");
-    }
-
-    final double EPSILON = 0.00001;
-
-    if (Math.abs(number1 - number2) < EPSILON) {
-      return true;
-    }
-    return false;
   }
 
   @Override
@@ -183,50 +197,21 @@ public class CarthesianCoordinate extends AbstractCoordinate {
 
     CarthesianCoordinate coordinateObject = ((Coordinate) obj).asCarthesianCoordinate();
 
-    boolean result;
-
-    if (isNearlyEqualDouble(x, coordinateObject.x) && isNearlyEqualDouble(y, coordinateObject.y)
-        && isNearlyEqualDouble(z, coordinateObject.z)) {
-      result = true;
-    } else {
-      result = false;
-    }
+    // Our hashCode implementation has a tolerance regarding floating point numbers.
+    // So it it perfectly fine to use it here.
+    boolean result = coordinateObject.hashCode() == this.hashCode();
 
     assertClassInvariants();
     return result;
   }
 
-  /**
-   * Round a value to have a maximum of "places" decimals.
-   * @param num The number to be rounded.
-   * @param places The maximum number of decimals.
-   */
-  private static double round(double num, int places) throws IllegalArgumentException {
-    if (!Double.isFinite(num)) {
-      throw new IllegalArgumentException("The number should be finite");
-    }
-    if (places < 0) {
-      throw new IllegalArgumentException("The places should not be less than 0. But they were: " + places);
-    }
+  private static int calculateAttributeFingerprint(double x, double y, double z) {
+    assertValidX(x);
+    assertValidY(y);
+    assertValidZ(z);
 
-    double pow = Math.pow(10, places);
-
-    double result;
-
-    result = num * pow;
-    result = Math.round(result);
-    result = result / pow;
-
-    assert (Double.isFinite(result)) : "The result should be finite";
-
-    return result;
-  }
-
-  @Override
-  public int hashCode() {
-    assertClassInvariants();
     // We use rounded values here to make sure that small differences in the
-    // floating point numbers still lead to the same hashCode.
+    // floating point numbers still lead to the same result.
 
     final int prime = 31;
     int result = 1;
@@ -238,6 +223,17 @@ public class CarthesianCoordinate extends AbstractCoordinate {
     temp = Double.doubleToLongBits(round(z, 4));
     result = prime * result + (int) (temp ^ (temp >>> 32));
 
+    return result;
+  }
+
+  @Override
+  public int hashCode() {
+    assertClassInvariants();
+    // We use rounded values here to make sure that small differences in the
+    // floating point numbers still lead to the same hashCode.
+
+    int result = calculateAttributeFingerprint(x, y, z);
+
     assertClassInvariants();
     return result;
   }
@@ -248,9 +244,9 @@ public class CarthesianCoordinate extends AbstractCoordinate {
       assertValidX(x);
       assertValidY(y);
       assertValidZ(z);
-    } catch(ArithmeticException e) {
+    } catch (ArithmeticException e) {
       throw new IllegalStateException("The class invariants were violated.", e);
-    }    
+    }
   }
 
   public static final void assertValidX(double x) throws ArithmeticException {

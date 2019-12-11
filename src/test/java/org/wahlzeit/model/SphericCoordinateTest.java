@@ -19,11 +19,23 @@ public class SphericCoordinateTest {
   }
 
   @Test
+  public void testInstancesCache() {
+    SphericCoordinate coordinate1 = SphericCoordinate.getCoordinate(1, 2, 3);
+    SphericCoordinate similarToCoordinate1 = SphericCoordinate.getCoordinate(1, 2, 3);
+    SphericCoordinate nearlySimilarToCoordinate1 = SphericCoordinate.getCoordinate(1.00000000001, 2, 3);
+    SphericCoordinate coordinate2 = SphericCoordinate.getCoordinate(10, 2, 3);
+
+    assert (coordinate1 == similarToCoordinate1);
+    assert (coordinate1 == nearlySimilarToCoordinate1);
+    assert (coordinate1 != coordinate2);
+  }
+
+  @Test
   public void testIsEqualToCarthesianCoordinate() {
-    SphericCoordinate sphericCoordinate = new SphericCoordinate(1, 2, 3);
+    SphericCoordinate sphericCoordinate = SphericCoordinate.getCoordinate(1, 2, 3);
     CarthesianCoordinate carthesianCoordinate = sphericCoordinate.asCarthesianCoordinate();
 
-    CarthesianCoordinate otherCarthesianCoordinate = new CarthesianCoordinate(1, 1, 1);
+    CarthesianCoordinate otherCarthesianCoordinate = CarthesianCoordinate.getCoordinate(1, 1, 1);
 
     assert (sphericCoordinate.isEqual(carthesianCoordinate));
     assert (!sphericCoordinate.isEqual(otherCarthesianCoordinate));
@@ -31,9 +43,9 @@ public class SphericCoordinateTest {
 
   @Test
   public void testHashCode() {
-    SphericCoordinate sphericCoordinate1 = new SphericCoordinate(1, 2, 3);
-    SphericCoordinate similarToCoordinate1 = new SphericCoordinate(1, 2, 3);
-    SphericCoordinate sphericCoordinate2 = new SphericCoordinate(2, 3, 1);
+    SphericCoordinate sphericCoordinate1 = SphericCoordinate.getCoordinate(1, 2, 3);
+    SphericCoordinate similarToCoordinate1 = SphericCoordinate.getCoordinate(1, 2, 3);
+    SphericCoordinate sphericCoordinate2 = SphericCoordinate.getCoordinate(2, 3, 1);
 
     assert (sphericCoordinate1.hashCode() == similarToCoordinate1.hashCode());
     assert (sphericCoordinate1.hashCode() != sphericCoordinate2.hashCode());
@@ -41,10 +53,10 @@ public class SphericCoordinateTest {
 
   @Test
   public void testHashCodeWithCarthesianCoordinate() {
-    SphericCoordinate sphericCoordinate = new SphericCoordinate(1, 2, 3);
+    SphericCoordinate sphericCoordinate = SphericCoordinate.getCoordinate(1, 2, 3);
     CarthesianCoordinate carthesianCoordinate = sphericCoordinate.asCarthesianCoordinate();
 
-    CarthesianCoordinate otherCarthesianCoordinate = new CarthesianCoordinate(1, 1, 1);
+    CarthesianCoordinate otherCarthesianCoordinate = CarthesianCoordinate.getCoordinate(1, 1, 1);
 
     assert (sphericCoordinate.hashCode() == carthesianCoordinate.hashCode());
     assert (sphericCoordinate.hashCode() != otherCarthesianCoordinate.hashCode());
@@ -52,7 +64,7 @@ public class SphericCoordinateTest {
 
   @Test
   public void testAsCarthesianCoordinate() {
-    SphericCoordinate coordinate = new SphericCoordinate(10, 2, 3);
+    SphericCoordinate coordinate = SphericCoordinate.getCoordinate(10, 2, 3);
 
     CarthesianCoordinate carthesianCoordinate = coordinate.asCarthesianCoordinate();
 

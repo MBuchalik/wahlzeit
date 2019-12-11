@@ -19,9 +19,9 @@ public class CarthesianCoordinateTest {
 
   @Test
   public void testIsEqual() {
-    CarthesianCoordinate coordinate1 = new CarthesianCoordinate(1, 2, 3);
-    CarthesianCoordinate similarToCoordinate1 = new CarthesianCoordinate(1, 2, 3);
-    CarthesianCoordinate coordinate2 = new CarthesianCoordinate(2, 3, 4);
+    CarthesianCoordinate coordinate1 = CarthesianCoordinate.getCoordinate(1, 2, 3);
+    CarthesianCoordinate similarToCoordinate1 = CarthesianCoordinate.getCoordinate(1, 2, 3);
+    CarthesianCoordinate coordinate2 = CarthesianCoordinate.getCoordinate(2, 3, 4);
 
     assert (coordinate1.isEqual(coordinate1));
     assert (coordinate1.isEqual(similarToCoordinate1));
@@ -30,11 +30,23 @@ public class CarthesianCoordinateTest {
   }
 
   @Test
+  public void testInstancesCache() {
+    CarthesianCoordinate coordinate1 = CarthesianCoordinate.getCoordinate(1, 2, 3);
+    CarthesianCoordinate similarToCoordinate1 = CarthesianCoordinate.getCoordinate(1, 2, 3);
+    CarthesianCoordinate nearlySimilarToCoordinate1 = CarthesianCoordinate.getCoordinate(1.00000000001, 2, 3);
+    CarthesianCoordinate coordinate2 = CarthesianCoordinate.getCoordinate(2, 3, 4);
+
+    assert (coordinate1 == similarToCoordinate1);
+    assert (coordinate1 == nearlySimilarToCoordinate1);
+    assert (coordinate1 != coordinate2);
+  }
+
+  @Test
   public void testIsEqualToSphericCoordinate() {
-    CarthesianCoordinate carthesianCoordinate = new CarthesianCoordinate(1, 2, 3);
+    CarthesianCoordinate carthesianCoordinate = CarthesianCoordinate.getCoordinate(1, 2, 3);
     SphericCoordinate sphericCoordinate = carthesianCoordinate.asSphericCoordinate();
 
-    SphericCoordinate otherSphericCoordinate = new SphericCoordinate(1, 1, 1);
+    SphericCoordinate otherSphericCoordinate = SphericCoordinate.getCoordinate(1, 1, 1);
 
     assert (carthesianCoordinate.isEqual(sphericCoordinate));
     assert (!carthesianCoordinate.isEqual(otherSphericCoordinate));
@@ -42,9 +54,9 @@ public class CarthesianCoordinateTest {
 
   @Test
   public void testHashCode() {
-    CarthesianCoordinate carthesianCoordinate1 = new CarthesianCoordinate(1, 2, 3);
-    CarthesianCoordinate similarToCoordinate1 = new CarthesianCoordinate(1, 2, 3);
-    CarthesianCoordinate carthesianCoordinate2 = new CarthesianCoordinate(2, 3, 4);
+    CarthesianCoordinate carthesianCoordinate1 = CarthesianCoordinate.getCoordinate(1, 2, 3);
+    CarthesianCoordinate similarToCoordinate1 = CarthesianCoordinate.getCoordinate(1, 2, 3);
+    CarthesianCoordinate carthesianCoordinate2 = CarthesianCoordinate.getCoordinate(2, 3, 4);
 
     assert (carthesianCoordinate1.hashCode() == similarToCoordinate1.hashCode());
     assert (carthesianCoordinate1.hashCode() != carthesianCoordinate2.hashCode());
@@ -52,10 +64,10 @@ public class CarthesianCoordinateTest {
 
   @Test
   public void testHashCodeWithSphericCoordinate() {
-    CarthesianCoordinate carthesianCoordinate = new CarthesianCoordinate(1, 2, 3);
+    CarthesianCoordinate carthesianCoordinate = CarthesianCoordinate.getCoordinate(1, 2, 3);
     SphericCoordinate sphericCoordinate = carthesianCoordinate.asSphericCoordinate();
 
-    SphericCoordinate otherSphericCoordinate = new SphericCoordinate(1, 1, 1);
+    SphericCoordinate otherSphericCoordinate = SphericCoordinate.getCoordinate(1, 1, 1);
 
     assert (carthesianCoordinate.hashCode() == sphericCoordinate.hashCode());
     assert (carthesianCoordinate.hashCode() != otherSphericCoordinate.hashCode());
@@ -63,10 +75,10 @@ public class CarthesianCoordinateTest {
 
   @Test
   public void testGetCarthesianDistance() {
-    CarthesianCoordinate coordinate1 = new CarthesianCoordinate(1, 3, 4);
-    CarthesianCoordinate coordinate2 = new CarthesianCoordinate(2, 3, 4);
-    CarthesianCoordinate coordinate3 = new CarthesianCoordinate(-1, 3, 4);
-    CarthesianCoordinate coordinate4 = new CarthesianCoordinate(1, 0, 0);
+    CarthesianCoordinate coordinate1 = CarthesianCoordinate.getCoordinate(1, 3, 4);
+    CarthesianCoordinate coordinate2 = CarthesianCoordinate.getCoordinate(2, 3, 4);
+    CarthesianCoordinate coordinate3 = CarthesianCoordinate.getCoordinate(-1, 3, 4);
+    CarthesianCoordinate coordinate4 = CarthesianCoordinate.getCoordinate(1, 0, 0);
 
     assert (isNearlyEqual(coordinate1.getCarthesianDistance(coordinate1), 0));
     assert (isNearlyEqual(coordinate1.getCarthesianDistance(coordinate2), 1));
@@ -76,7 +88,7 @@ public class CarthesianCoordinateTest {
 
   @Test
   public void testAsSphericCoordinate() {
-    CarthesianCoordinate coordinate = new CarthesianCoordinate(1, 2, 3);
+    CarthesianCoordinate coordinate = CarthesianCoordinate.getCoordinate(1, 2, 3);
 
     SphericCoordinate sphericCoordinate = coordinate.asSphericCoordinate();
 
