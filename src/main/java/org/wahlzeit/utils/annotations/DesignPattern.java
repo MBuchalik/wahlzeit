@@ -8,7 +8,3 @@ public @interface DesignPattern {
 
   String[] participants();
 }
-
-@interface DesignPatterns {
-  DesignPattern[] value();
-}
