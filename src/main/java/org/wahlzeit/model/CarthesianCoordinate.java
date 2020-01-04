@@ -2,6 +2,12 @@ package org.wahlzeit.model;
 
 import java.util.HashMap;
 
+import org.wahlzeit.utils.annotations.DesignPattern;
+
+@DesignPattern(
+  name = "Flyweight",
+  participants = {"FlyweightFactory", "Flyweight", "ConcreteFlyweight"}
+)
 public class CarthesianCoordinate extends AbstractCoordinate {
   private static final HashMap<Integer, CarthesianCoordinate> map = new HashMap<>();
 
