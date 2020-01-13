@@ -27,7 +27,7 @@ public class PalaceManager {
     return result;
   }
 
-  private synchronized PalaceType getPalaceType(String typeName) {
+  public synchronized PalaceType getPalaceType(String typeName) {
     PalaceType result = this.typeMap.get(typeName);
     if (result == null) {
       result = new PalaceType();

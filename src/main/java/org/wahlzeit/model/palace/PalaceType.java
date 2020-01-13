@@ -1,11 +1,10 @@
 package org.wahlzeit.model.palace;
 
 import java.util.HashSet;
-import java.util.Set;
 
 public class PalaceType {
   protected PalaceType superType = null;
-  protected Set<PalaceType> subTypes = new HashSet<PalaceType>();
+  protected HashSet<PalaceType> subTypes = new HashSet<PalaceType>();
 
   public PalaceType getSuperType() {
     return superType;
